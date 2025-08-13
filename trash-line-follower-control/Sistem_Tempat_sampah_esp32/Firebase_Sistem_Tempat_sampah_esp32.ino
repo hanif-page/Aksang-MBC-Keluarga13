@@ -13,7 +13,6 @@
 
 #include "pitches.h"
 
-
 // ================= Firebase Connections =================
 #include <WiFi.h>
 #include <Firebase_ESP_Client.h>
@@ -149,6 +148,19 @@ void beepSekaliPanjang(int freq, int durMs) { tone(BUZZER_PIN, freq, durMs); }
 void beepCepatTinggi() { tone(BUZZER_PIN, NOTE_C6, 100); } // dipanggil terus di MASALAH
 void beepLamaSedang() { tone(BUZZER_PIN, NOTE_A4, 500); }  // BUANG
 
+// ================= HELPER: Firebase Status Sender =================
+// Fungsi untuk mengirim status ke Firebase
+void sendFirebaseStatus(String status) {
+  if (Firebase.ready()) {
+    // Mengirim data string ke path /trash/01/status
+    if (Firebase.RTDB.setString(&fbdo, "/trash/01/status", status)) {
+      Serial.println("SUCCESS: Sent status -> " + status);
+    } else {
+      Serial.println("FAILED to send status: " + fbdo.errorReason());
+    }
+  }
+}
+
 // ================= SETUP =================
 void setup() {
   Serial.begin(115200);
@@ -243,14 +255,40 @@ void loop() {
   bool persimpangan = (kiri && tengah && kanan);
   bool kehilanganGaris = (!kiri && !tengah && !kanan);
 
-  // deteksi transisi state untuk one-shot actions
+  // deteksi transisi state untuk one-shot actions DAN KIRIM STATUS
   if (state != prevState) {
+    String newStatus = "";
+    // Menentukan string status berdasarkan state baru
+    switch (state) {
+      case STATE_IDLE:
+      case STATE_CONFIRM_FULL:
+        newStatus = "green"; // LED Hijau
+        break;
+      case STATE_OTW:
+      case STATE_BALIK:
+        newStatus = "yellow_blink"; // LED Kuning Blip
+        break;
+      case STATE_MASALAH:
+        newStatus = "red_blink"; // LED Merah Blip
+        break;
+      case STATE_BUANG:
+        newStatus = "red"; // LED Merah full
+        break;
+    }
+    
+    // Kirim status baru ke Firebase jika tidak kosong
+    if (newStatus != "") {
+      sendFirebaseStatus(newStatus);
+    }
+
+    // Reset one-shot action flags
     if (state == STATE_OTW) { otwBeeped = false; }
     if (state == STATE_BALIK) { balikBeeped = false; }
     prevState = state;
   }
 
   switch (state) {
+
     // LED HIJAU
     case STATE_IDLE: {
       setLED(false,false,true); // hijau ON
@@ -360,11 +398,4 @@ void loop() {
       }
     } break;
   }
-
-  // debug ringan
-  // Serial.print("d1:"); Serial.print(distance1);
-  // Serial.print(" d2:"); Serial.print(distance2);
-  // Serial.print(" | S:"); Serial.print((int)state);
-  // Serial.print(" | K:"); Serial.print(kiri);
-  // Serial.print(tengah); Serial.println(kanan);
 }

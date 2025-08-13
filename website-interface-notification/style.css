@@ -1,0 +1,247 @@
+/* === General Styling & Fonts === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FA; /* Light grey background for the page */
+    color: #333;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.material-symbols--location-on {
+
+    display: inline-block;
+
+    width: 24px;
+
+    height: 24px;
+
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 12q.825 0 1.413-.587T14 10t-.587-1.412T12 8t-1.412.588T10 10t.588 1.413T12 12m0 10q-4.025-3.425-6.012-6.362T4 10.2q0-3.75 2.413-5.975T12 2t5.588 2.225T20 10.2q0 2.5-1.987 5.438T12 22'/%3E%3C/svg%3E");
+
+    background-color: currentColor;
+
+    -webkit-mask-image: var(--svg);
+
+    mask-image: var(--svg);
+
+    -webkit-mask-repeat: no-repeat;
+
+    mask-repeat: no-repeat;
+
+    -webkit-mask-size: 100% 100%;
+
+    mask-size: 100% 100%;
+
+}
+
+.phone-container {
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* === Header === */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+}
+
+header h1 {
+    color: #1E8C4E;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+header .location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #1E8C4E;
+    font-weight: 400;
+    font-size: 0.75em;
+}
+
+
+/* === Main Content === */
+main {
+    padding: 0 .75rem;
+    flex-grow: 1;
+}
+
+/* === Trash Card === */
+.trash-card {
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.trash-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.id-label {
+    font-size: 0.9rem;
+    color: #828282;
+}
+
+.id-and-status {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.id-number {
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.status-light {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .5s;
+}
+
+.action-button:hover {
+    opacity: .5;
+}
+
+.checkmark-box {
+    width: 32px;
+    height: 32px;
+    background-color: #1E8C4E;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+}
+
+
+/* === Line Divider === */
+/* The line divider is not present in the mockup, so we hide it */
+.line-divider {
+    display: none;
+}
+
+
+/* === Status Information === */
+.trash-status-information {
+    margin-top: 2rem;
+}
+
+.trash-status-information h2 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.informations {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.information {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.light-indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0; /* Prevents the circle from shrinking */
+}
+
+/* Color definitions for indicators */
+.light-indicator.green { background-color: #27AE60; }
+.light-indicator.yellow { background-color: #F2C94C; }
+.light-indicator.red { background-color: #EB5757; }
+
+/* Blinking animation */
+@keyframes blink-animation {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.blink {
+    animation: blink-animation 1.5s infinite;
+}
+
+.trash-card .status-light.green {
+    background-color: #27AE60;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+/* === Footer === */
+footer {
+    text-align: center;
+    padding: 2rem 1rem 1rem 1rem;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #828282;
+}
+
+.k-13-text {
+    font-weight: 700;
+    color: #1E8C4E;
+}
+
+.button-disabled {
+    opacity: .5;
+    cursor: none;
+}
+
+@media screen and (min-width: 393px) {
+
+    .phone-container {
+
+        width: 393px;
+
+        border: 1px solid black;
+
+        border-radius: 8px;
+
+        min-height: 95vh;
+
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    .action-button {
+        min-width: 9rem;
+    }
+
+}

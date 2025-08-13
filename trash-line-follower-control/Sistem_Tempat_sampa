@@ -13,24 +13,6 @@
 
 #include "pitches.h"
 
-
-// ================= Firebase Connections =================
-#include <WiFi.h>
-#include <Firebase_ESP_Client.h>
-
-// --- 1. Your Network Credentials ---
-#define WIFI_SSID "Hanif"
-#define WIFI_PASSWORD "wifigratis"
-
-// --- 2. Your Firebase Project Credentials ---
-#define API_KEY "AIzaSyDeCrbgFf6M_fl22DYnawUNY_yDqbkQWy4"
-#define DATABASE_URL "https://dump-wall-e-tipes-default-rtdb.asia-southeast1.firebasedatabase.app"
-
-// --- 3. Firebase Objects ---
-FirebaseData fbdo;
-FirebaseAuth auth;
-FirebaseConfig config;
-
 // ================= PIN DEFINITIONS =================
 #define SENSOR_KIRI_PIN   25
 #define SENSOR_TENGAH_PIN 26
@@ -169,21 +151,6 @@ void setup() {
 
   setLED(false,false,true); // hijau ON (idle)
   Serial.println("Robot Line Follower PID Hybrid + State Machine READY");
-
-  // Connect to Wi-Fi
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Connecting to Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(300);
-  }
-  Serial.println("\nConnected!");
-
-  // Configure and initialize Firebase
-  config.api_key = API_KEY;
-  config.database_url = DATABASE_URL;
-  Firebase.begin(&config, &auth);
-  Firebase.reconnectWiFi(true);
 }
 
 // ================= LINE FOLLOW (FORWARD) =================
@@ -251,7 +218,6 @@ void loop() {
   }
 
   switch (state) {
-    // LED HIJAU
     case STATE_IDLE: {
       setLED(false,false,true); // hijau ON
       noTone(BUZZER_PIN);
@@ -282,7 +248,6 @@ void loop() {
       setLED(false,false,true);
     } break;
 
-    // LED Kuning Blip
     case STATE_OTW: {
       // indikator
       blinkKuning();
@@ -307,7 +272,6 @@ void loop() {
       followLineForward(kiri, tengah, kanan);
     } break;
 
-    // LED Merah Blip
     case STATE_MASALAH: {
       blinkMerah();
       beepCepatTinggi();
@@ -320,7 +284,6 @@ void loop() {
       }
     } break;
 
-    // LED Merah full
     case STATE_BUANG: {
       // merah stabil + beep lama nada sedang, menunggu petugas buang
       setLED(true,false,false);
@@ -334,7 +297,6 @@ void loop() {
       }
     } break;
 
-    // LED Kuning Blip
     case STATE_BALIK: {
       // indikator
       blinkKuning();

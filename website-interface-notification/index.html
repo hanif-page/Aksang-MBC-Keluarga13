@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall-E DUMP</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="phone-container">
+        <header>
+            <h1>Wall-E DUMP</h1>
+    
+            <div class="location">
+                <div class="material-symbols--location-on"></div>
+                <div class="location-name">Aula Timur</div>
+            </div>
+        </header>
+    
+        <main>
+            <div class="trash-card">
+                <div class="trash-details">
+                    <span class="id-label">Trash ID</span>
+                    <div class="id-and-status">
+                        <span class="id-number">01</span>
+                        <div class="light-indicator green"></div>
+                    </div>
+                </div>
+                <div class="trash-action">
+                    <span class="id-label">Sudah dibuang?</span>
+
+                    <!-- to create it disabled (when the trash is not full), then set add class "button-disabled" -->
+                    <div class="action-button" style="background-color: green; display: flex; justify-content: center; align-items: center; margin-top: .25rem; height: 1.3rem;">
+                            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1.42871 7.4659L7.42871 13.4659L18.5716 2.32304" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>     
+                    </div>
+                </div>
+            </div>
+    
+            <div class="line-divider"></div>
+    
+            <div class="trash-status-information">
+                <h2>Status Tempat Sampah</h2>
+    
+                <div class="informations">
+                    <div class="information">
+                        <div class="light-indicator green"></div>
+                        <div>Tempat sampah sedang dalam posisi digunakan (belum penuh)</div>
+                    </div>
+                    <div class="information">
+                        <div class="light-indicator yellow blink"></div>
+                        <div>Tempat sampah dalam proses perjalanan (menuju waste center atau kembali dari waste center)</div>
+                    </div>
+                    <div class="information">
+                        <div class="light-indicator red blink"></div>
+                        <div>Terdapat suatu permasalahan pada tempa sampah (ada obstacle, keluar jalur, atau masalah lainnya)</div>
+                    </div>
+                    <div class="information">
+                        <div class="light-indicator red"></div>
+                        <div>Tempat sampah sudah sampai waste center, perlu dibuang oleh pihak petugas</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Created by <span class="k-13-text">Kelompok 13</span> MBC HME ITB 2025.</p>
+        </footer>
+    </div>
+
+    <!-- temporary part, for testing purpose -->
+    <button id="permission-btn">Request Permission</button>
+    <button id="notify-btn">Show Notification</button>
+
+    <script>
+        // Wait for the document to be fully loaded before running any script
+        document.addEventListener('DOMContentLoaded', () => {
+            const permissionBtn = document.getElementById('permission-btn');
+            const notifyBtn = document.getElementById('notify-btn');
+
+            // --- KEY FUNCTION 1: Register the Service Worker ---
+            // This must be done first to enable background features like notifications.
+            if ('serviceWorker' in navigator) {
+                console.log("hi")
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully.', registration);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            } else {
+                console.warn('Service Workers are not supported in this browser.');
+            }
+
+            // --- KEY FUNCTION 2: Request Permission from the User ---
+            // You must ask for permission before you can show notifications.
+            permissionBtn.addEventListener('click', () => {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Notification permission granted!');
+                    } else {
+                        console.log('Notification permission was denied.');
+                    }
+                });
+            });
+
+            // --- KEY FUNCTION 3: Show the Notification ---
+            // This function uses the service worker to display the notification.
+            notifyBtn.addEventListener('click', () => {
+                if (Notification.permission !== 'granted') {
+                    console.log('Permission has not been granted yet. Please request it first.');
+                    return; // Stop if permission is not granted
+                }
+
+                
+                // Wait for the service worker to be ready
+                navigator.serviceWorker.ready.then(registration => {
+                    // Define the content of the notification
+                    const notificationTitle = 'Hello!';
+                    const notificationOptions = {
+                        body: 'Trash is full!',
+                        icon: 'https://placehold.co/192x192/28a745/white?text=Hi' // NEEDED TO BE CHANGED
+                    };
+                    
+                    // Use the service worker's registration to show the notification
+                    registration.showNotification(notificationTitle, notificationOptions); // it runs well on mac!
+                });
+            });
+        });
+    </script>
+
+    <script src="index.js" defer type="module" ></script>
+</body>
+</html>
